@@ -1,0 +1,20 @@
+
+# Python
+__pycache__/
+*.py[cod]
+env/
+venv/
+.env
+
+# Node
+node_modules/
+.expo/
+android/
+ios/
+dist/
+
+# Data & artifacts
+*.db
+*.sqlite3
+uploads/
+encodings/*.bin

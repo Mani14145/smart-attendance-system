@@ -1,0 +1,35 @@
+
+version: '3.8'
+services:
+  mongo:
+    image: mongo:6
+    restart: unless-stopped
+    volumes:
+      - mongo-data:/data/db
+      - ./infra/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    ports:
+      - 27017:27017
+
+  backend:
+    build: ./backend
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=${MONGO_URI}
+    ports:
+      - 8000:8000
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    image: node:18
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 19002:19002
+    command: sh -c "npm install && npx expo start --tunnel"
+
+volumes:
+  mongo-data:
